@@ -1,34 +1,30 @@
 package org.esfe.sistemaZetino.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
-
-@Entity
-@Table(name = "roles")
 public class Rol {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idRol")
-    private Integer idRol;
 
-    @NotBlank(message = "El nombre es requerido")
+    private Long idRol;
     private String nombre;
-
-    @NotBlank(message = "El estado es requerido")
     private String estado;
 
-    // Relación: Un rol puede tener muchos usuarios
-    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UsuarioSistema> usuarios = new HashSet<>();
+    // Constructor vacío
+    public Rol() {}
 
-    // Getters y Setters
-    public Integer getIdRol() {
+    // Constructor con validaciones
+    public Rol(Long idRol, String nombre, String estado) {
+        this.setIdRol(idRol);
+        this.setNombre(nombre);
+        this.setEstado(estado);
+    }
+
+    // Getters y Setters con validaciones
+    public Long getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(Integer idRol) {
+    public void setIdRol(Long idRol) {
+        if (idRol != null && idRol < 0) {
+            throw new IllegalArgumentException("El id del rol no puede ser negativo");
+        }
         this.idRol = idRol;
     }
 
@@ -37,6 +33,9 @@ public class Rol {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre del rol es obligatorio");
+        }
         this.nombre = nombre;
     }
 
@@ -45,14 +44,9 @@ public class Rol {
     }
 
     public void setEstado(String estado) {
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
         this.estado = estado;
-    }
-
-    public Set<UsuarioSistema> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(Set<UsuarioSistema> usuarios) {
-        this.usuarios = usuarios;
     }
 }
