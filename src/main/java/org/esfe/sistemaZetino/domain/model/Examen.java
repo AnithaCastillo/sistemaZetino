@@ -1,43 +1,39 @@
 package org.esfe.sistemaZetino.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-
-@Entity
-@Table(name = "examenes")
 public class Examen {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_examen")
     private Integer idExamen;
-
-    @NotNull(message = "El id de orden es obligatorio")
-    @Column(name = "id_orden")
     private Integer idOrden;
-
-    @NotBlank(message = "El nombre del examen es obligatorio")
-    @Column(name = "nombre_examen")
     private String nombreExamen;
-
     private String descripcion;
-
-    @NotNull(message = "El tiempo estimado es obligatorio")
-    @Column(name = "tiempo_estimado")
     private Integer tiempoEstimado;
-
-    @NotNull(message = "El precio es obligatorio")
     private Double precio;
-
-    @NotBlank(message = "El estado es obligatorio")
     private String estado;
 
-    // Getters y Setters
+    // Constructor vacío
+    public Examen() {}
+
+    // Constructor con validaciones
+    public Examen(Integer idExamen, Integer idOrden, String nombreExamen, String descripcion,
+                  Integer tiempoEstimado, Double precio, String estado) {
+        this.setIdExamen(idExamen);
+        this.setIdOrden(idOrden);
+        this.setNombreExamen(nombreExamen);
+        this.setDescripcion(descripcion);
+        this.setTiempoEstimado(tiempoEstimado);
+        this.setPrecio(precio);
+        this.setEstado(estado);
+    }
+
+    // Getters y Setters con validaciones
     public Integer getIdExamen() {
         return idExamen;
     }
 
     public void setIdExamen(Integer idExamen) {
+        if (idExamen != null && idExamen < 0) {
+            throw new IllegalArgumentException("El id del examen no puede ser negativo");
+        }
         this.idExamen = idExamen;
     }
 
@@ -46,6 +42,9 @@ public class Examen {
     }
 
     public void setIdOrden(Integer idOrden) {
+        if (idOrden == null || idOrden < 0) {
+            throw new IllegalArgumentException("El id de orden es obligatorio y no puede ser negativo");
+        }
         this.idOrden = idOrden;
     }
 
@@ -54,6 +53,9 @@ public class Examen {
     }
 
     public void setNombreExamen(String nombreExamen) {
+        if (nombreExamen == null || nombreExamen.isBlank()) {
+            throw new IllegalArgumentException("El nombre del examen es obligatorio");
+        }
         this.nombreExamen = nombreExamen;
     }
 
@@ -62,6 +64,9 @@ public class Examen {
     }
 
     public void setDescripcion(String descripcion) {
+        if (descripcion != null && descripcion.length() > 500) {
+            throw new IllegalArgumentException("La descripción no puede exceder 500 caracteres");
+        }
         this.descripcion = descripcion;
     }
 
@@ -70,6 +75,9 @@ public class Examen {
     }
 
     public void setTiempoEstimado(Integer tiempoEstimado) {
+        if (tiempoEstimado == null || tiempoEstimado <= 0) {
+            throw new IllegalArgumentException("El tiempo estimado debe ser mayor que 0");
+        }
         this.tiempoEstimado = tiempoEstimado;
     }
 
@@ -78,6 +86,9 @@ public class Examen {
     }
 
     public void setPrecio(Double precio) {
+        if (precio == null || precio < 0) {
+            throw new IllegalArgumentException("El precio es obligatorio y no puede ser negativo");
+        }
         this.precio = precio;
     }
 
@@ -86,6 +97,9 @@ public class Examen {
     }
 
     public void setEstado(String estado) {
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
         this.estado = estado;
     }
 }
