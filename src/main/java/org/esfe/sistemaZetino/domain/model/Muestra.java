@@ -1,40 +1,36 @@
 package org.esfe.sistemaZetino.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "muestras")
 public class Muestra {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_muestra")
     private Integer idMuestra;
-
-    @NotNull(message = "El id de la orden es obligatorio")
-    @Column(name = "id_orden")
     private Integer idOrden;
-
-    @NotBlank(message = "El tipo de muestra es obligatorio")
-    @Column(name = "tipo_muestra")
     private String tipoMuestra;
-
-    @NotNull(message = "La fecha de recepción es obligatoria")
-    @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_recepcion")
     private Date fechaRecepcion;
-
-    @NotBlank(message = "El estado es obligatorio")
     private String estado;
 
-    // Getters y Setters
+    // Constructor vacío
+    public Muestra() {}
+
+    // Constructor con validaciones
+    public Muestra(Integer idMuestra, Integer idOrden, String tipoMuestra, Date fechaRecepcion, String estado) {
+        this.setIdMuestra(idMuestra);
+        this.setIdOrden(idOrden);
+        this.setTipoMuestra(tipoMuestra);
+        this.setFechaRecepcion(fechaRecepcion);
+        this.setEstado(estado);
+    }
+
+    // Getters y Setters con validaciones
     public Integer getIdMuestra() {
         return idMuestra;
     }
 
     public void setIdMuestra(Integer idMuestra) {
+        if (idMuestra != null && idMuestra < 0) {
+            throw new IllegalArgumentException("El id de muestra no puede ser negativo");
+        }
         this.idMuestra = idMuestra;
     }
 
@@ -43,6 +39,9 @@ public class Muestra {
     }
 
     public void setIdOrden(Integer idOrden) {
+        if (idOrden == null) {
+            throw new IllegalArgumentException("El id de la orden es obligatorio");
+        }
         this.idOrden = idOrden;
     }
 
@@ -51,6 +50,9 @@ public class Muestra {
     }
 
     public void setTipoMuestra(String tipoMuestra) {
+        if (tipoMuestra == null || tipoMuestra.isBlank()) {
+            throw new IllegalArgumentException("El tipo de muestra es obligatorio");
+        }
         this.tipoMuestra = tipoMuestra;
     }
 
@@ -59,6 +61,9 @@ public class Muestra {
     }
 
     public void setFechaRecepcion(Date fechaRecepcion) {
+        if (fechaRecepcion == null) {
+            throw new IllegalArgumentException("La fecha de recepción es obligatoria");
+        }
         this.fechaRecepcion = fechaRecepcion;
     }
 
@@ -67,6 +72,9 @@ public class Muestra {
     }
 
     public void setEstado(String estado) {
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
         this.estado = estado;
     }
 }

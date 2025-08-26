@@ -1,40 +1,36 @@
 package org.esfe.sistemaZetino.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-
-@Entity
-@Table(name = "notificaciones_email")
 public class NotificacionEmail {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_notificacion")
     private Integer idNotificacion;
-
-    @NotNull(message = "El id de resultado es obligatorio")
-    @Column(name = "id_resultado")
     private Integer idResultado;
-
-    @NotBlank(message = "El asunto es obligatorio")
     private String asunto;
-
-    @NotBlank(message = "El mensaje es obligatorio")
     private String mensaje;
-
-    @NotBlank(message = "El estado de envío es obligatorio")
-    @Column(name = "estado_envio")
     private String estadoEnvio;
-
-    @NotBlank(message = "El estado es obligatorio")
     private String estado;
 
-    // Getters y Setters
+    // Constructor vacío
+    public NotificacionEmail() {}
+
+    // Constructor con validaciones
+    public NotificacionEmail(Integer idNotificacion, Integer idResultado, String asunto, String mensaje, String estadoEnvio, String estado) {
+        this.setIdNotificacion(idNotificacion);
+        this.setIdResultado(idResultado);
+        this.setAsunto(asunto);
+        this.setMensaje(mensaje);
+        this.setEstadoEnvio(estadoEnvio);
+        this.setEstado(estado);
+    }
+
+    // Getters y Setters con validaciones
     public Integer getIdNotificacion() {
         return idNotificacion;
     }
 
     public void setIdNotificacion(Integer idNotificacion) {
+        if (idNotificacion != null && idNotificacion < 0) {
+            throw new IllegalArgumentException("El id de notificación no puede ser negativo");
+        }
         this.idNotificacion = idNotificacion;
     }
 
@@ -43,6 +39,9 @@ public class NotificacionEmail {
     }
 
     public void setIdResultado(Integer idResultado) {
+        if (idResultado == null) {
+            throw new IllegalArgumentException("El id de resultado es obligatorio");
+        }
         this.idResultado = idResultado;
     }
 
@@ -51,6 +50,9 @@ public class NotificacionEmail {
     }
 
     public void setAsunto(String asunto) {
+        if (asunto == null || asunto.isBlank()) {
+            throw new IllegalArgumentException("El asunto es obligatorio");
+        }
         this.asunto = asunto;
     }
 
@@ -59,6 +61,9 @@ public class NotificacionEmail {
     }
 
     public void setMensaje(String mensaje) {
+        if (mensaje == null || mensaje.isBlank()) {
+            throw new IllegalArgumentException("El mensaje es obligatorio");
+        }
         this.mensaje = mensaje;
     }
 
@@ -67,6 +72,9 @@ public class NotificacionEmail {
     }
 
     public void setEstadoEnvio(String estadoEnvio) {
+        if (estadoEnvio == null || estadoEnvio.isBlank()) {
+            throw new IllegalArgumentException("El estado de envío es obligatorio");
+        }
         this.estadoEnvio = estadoEnvio;
     }
 
@@ -75,6 +83,9 @@ public class NotificacionEmail {
     }
 
     public void setEstado(String estado) {
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
         this.estado = estado;
     }
 }
