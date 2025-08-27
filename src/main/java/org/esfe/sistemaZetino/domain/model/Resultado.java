@@ -1,49 +1,41 @@
 package org.esfe.sistemaZetino.domain.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
-@Entity
-@Table(name = "resultado")
 public class Resultado {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_resultado")
     private Long idResultado;
-
-    @NotNull(message = "La muestra es obligatoria")
-    @ManyToOne
-    @JoinColumn(name = "id_muestra", nullable = false)
     private Muestra muestra;
-
-    @NotNull(message = "El usuario es obligatorio")
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioSistema usuario;
-
-    @NotNull(message = "El examen es obligatorio")
-    @ManyToOne
-    @JoinColumn(name = "id_examen", nullable = false)
     private Examen examen;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_entrega", nullable = false)
     private Date fechaEntrega;
-
-    @Column(name = "observaciones")
     private String observaciones;
-
-    @Column(name = "archivo_resultado")
     private String archivoResultado;
 
-    // Getters y Setters
+    // Constructor vacío
+    public Resultado() {}
+
+    // Constructor con validaciones
+    public Resultado(Long idResultado, Muestra muestra, UsuarioSistema usuario, Examen examen,
+                     Date fechaEntrega, String observaciones, String archivoResultado) {
+        this.setIdResultado(idResultado);
+        this.setMuestra(muestra);
+        this.setUsuario(usuario);
+        this.setExamen(examen);
+        this.setFechaEntrega(fechaEntrega);
+        this.setObservaciones(observaciones);
+        this.setArchivoResultado(archivoResultado);
+    }
+
+    // Getters y Setters con validaciones
     public Long getIdResultado() {
         return idResultado;
     }
 
     public void setIdResultado(Long idResultado) {
+        if (idResultado != null && idResultado < 0) {
+            throw new IllegalArgumentException("El id del resultado no puede ser negativo");
+        }
         this.idResultado = idResultado;
     }
 
@@ -52,6 +44,9 @@ public class Resultado {
     }
 
     public void setMuestra(Muestra muestra) {
+        if (muestra == null) {
+            throw new IllegalArgumentException("La muestra es obligatoria");
+        }
         this.muestra = muestra;
     }
 
@@ -60,6 +55,9 @@ public class Resultado {
     }
 
     public void setUsuario(UsuarioSistema usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("El usuario es obligatorio");
+        }
         this.usuario = usuario;
     }
 
@@ -68,6 +66,9 @@ public class Resultado {
     }
 
     public void setExamen(Examen examen) {
+        if (examen == null) {
+            throw new IllegalArgumentException("El examen es obligatorio");
+        }
         this.examen = examen;
     }
 
@@ -76,6 +77,13 @@ public class Resultado {
     }
 
     public void setFechaEntrega(Date fechaEntrega) {
+        if (fechaEntrega == null) {
+            throw new IllegalArgumentException("La fecha de entrega es obligatoria");
+        }
+        Date hoy = new Date();
+        if (fechaEntrega.after(hoy)) {
+            throw new IllegalArgumentException("La fecha de entrega no puede estar en el futuro");
+        }
         this.fechaEntrega = fechaEntrega;
     }
 
@@ -84,6 +92,9 @@ public class Resultado {
     }
 
     public void setObservaciones(String observaciones) {
+        if (observaciones != null && observaciones.length() > 1000) {
+            throw new IllegalArgumentException("Las observaciones no pueden superar 1000 caracteres");
+        }
         this.observaciones = observaciones;
     }
 
@@ -92,6 +103,9 @@ public class Resultado {
     }
 
     public void setArchivoResultado(String archivoResultado) {
+        if (archivoResultado != null && archivoResultado.length() > 255) {
+            throw new IllegalArgumentException("El archivo de resultado no puede superar 255 caracteres");
+        }
         this.archivoResultado = archivoResultado;
     }
 }
